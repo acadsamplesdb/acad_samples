@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ samplegroup }}{% endblock %}
+{% block content %}
+<h1>{{ samplegroup }}</h1>
+<table class="table">
+    <tr><th>Group number</th><td>{{ samplegroup.get_formatted_group_num }}</</td></tr>
+    <tr><th>Samples</th>
+    <td><ul class="list-unstyled">
+            {% for sample in samplegroup.sample_set.all %}
+            <li><a href="{% url 'sample_detail' sample.acad_num %}">{{ sample }}</a></li>
+            {% endfor%}
+        </ul>
+    </td></tr>
+    <tr><th>AQIS number</th><td>{{ samplegroup.aqis_num }}</td></tr>
+    <tr><th>Date of entry into ACAD</th><td>{{ samplegroup.accession_date }}</td></tr>
+    <tr><th>Permit</th><td>{% if samplegroup.permit %}<a href="{% url 'permit_detail' samplegroup.permit.id %}">{{ samplegroup.permit }}</a>{% endif %}</td></tr>
+    <tr><th>Permit number</th></td><td>{{ samplegroup.permit_num }}</td></tr>
+    <tr><th>Description</th><td>{{ samplegroup.description }}</td></tr>
+    <tr><th>Quantity of samples</th><td>{{ samplegroup.quantity }}</td></tr>
+    <tr><th>Country of origin</th><td>{{ samplegroup.origin }}</td></tr>
+    <tr><th>ACAD location</th><td>{{ samplegroup.acad_loc }}</td></th>
+    <tr><th>Movement and transfer</th><td>{{ samplegroup.movement }}</td>
+    <tr><th>Other relevant info</th><td>{{ samplegroup.notes }}</td></tr>
+    <tr><th>Sent by</th><td>{{ samplegroup.sent_by }}</td>
+    <tr><th>ACAD contact</th><td>{{ samplegroup.contact }}</td></tr>
+</table>
+<p><a class="btn btn-warning" href="{% url 'samplegroup_edit' samplegroup.group_num %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'samplegroup_delete' samplegroup.group_num %}">Delete me</a></p>
+{% endblock %}

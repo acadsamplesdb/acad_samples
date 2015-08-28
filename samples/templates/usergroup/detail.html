@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ group }}{% endblock %}
+{% block content %}
+<h1>{{ group }}</h1>
+{% if user_list %}
+<h2>Users</h2>
+<ul>
+    {% for user in user_list %}
+    <li>{{ user }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if project_list %}
+<h2>Projects</h2>
+<ul>
+    {% for project in project_list %}
+    <li><a href="{% url 'project_detail' project.id %}">{{ project }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a class="btn btn-warning" href="{% url 'usergroup_edit' group.id %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'usergroup_delete' group.id %}">Delete me</a></p>
+{% endblock %}

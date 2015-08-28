@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Upload groups{% endblock %}
+{% block content %}
+<h1>Upload groups</h1>
+<div class="row"><div class="col-xs-8">
+<form action="" method="post" enctype="multipart/form-data">
+{% crispy form %}
+<p><input class="btn btn-primary" type="submit" value="Upload" /></p>
+</form>
+</div></div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<h1>Projects</h1>
+{% if user_projects or group_projects %}
+<h2>My projects</h2>
+<ul>
+    {% for user_project in user_projects %}
+    <li><a href="{% url 'project_detail' user_project.id %}">{{ user_project }}</a></li>
+    {% endfor %}
+    {% if group_projects %}
+        {% for group, projects in group_projects.items %}
+        {% if projects %}
+        <li>{{ group }}</li>
+        <ul>
+            {% for project in projects %}
+            <li><a href="{% url 'project_detail' project.id %}">{{ project }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+</ul>
+{% endif %}
+{% if project_list %}
+<h2>All projects</h2>
+<ul>
+    {% for project in project_list %}
+    <li><a href="{% url 'project_detail' project.id %}">{{ project }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'project_create' %}">Add project</a></p>
+{% endblock %}

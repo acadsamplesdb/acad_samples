@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Extractions{% endblock %}
+{% block content %}
+<h1>Extractions</h1>
+{% if extraction_list %}
+{% include "extraction/extraction_table.html" %}
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'extraction_create' %}">Add extraction</a></p>
+{% endblock %}

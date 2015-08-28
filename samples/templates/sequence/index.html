@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Sequencing{% endblock %}
+{% block content %}
+<h1>Sequencing</h1>
+{% if sequence_list %}
+<ul>
+    {% for sequence in sequence_list %}
+    <li><a href="{% url 'sequence_detail' sequence.id %}">{{ sequence }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'sequence_create' %}">Add sequence</a></p>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ sequence }}{% endblock %}
+{% block content %}
+<h1>{{ sequence }}</h1>
+<table class="table">
+    <tr><th>Amplification</th><td>{% if sequence.amplification %}<a href="{% url 'amplification_detail' sequence.amplification.id %}">{{ sequence.amplification }}</a>{% endif %}</td></tr>
+    <tr><th>Enrichment</th><td>{% if sequence.enrichment %}<a href="{% url 'enrichment_detail' sequence.enrichment.id %}">{{ sequence.enrichment }}</a>{% endif %}</td></tr>
+    <tr><th>Path to sequencing files</th><td>{{ sequence.path }}</td></tr>
+</table>
+<p><a class="btn btn-warning" href="{% url 'sequence_edit' sequence.id %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'sequence_delete' sequence.id %}">Delete me</a></p>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load floatcutzeroes %}
+{% block title %}Carbon dates{% endblock %}
+{% block content %}
+<h1>Carbon dates</h1>
+{% if c14_list %}
+<table class="table table-striped sortable" id="table">
+    <thead>
+        <tr>
+            <th>ACAD&nbsp;#</th>
+            <th>Sample reference</th>
+            <th>Date</th>
+            <th>Error</th>
+            <th>Centre+ID</th>
+            <th>del13</th>
+            <th>del15</th>
+            <th>cnratio</th>
+            <th>use_weight</th>
+            <th>pyield</th>
+            <th>burnweight</th>
+            <th>burnyield</th>
+            <th>pcbyield</th>
+            <th>nyield</th>
+            <th>percent_c</th>
+            <th>mg_c</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c14 in c14_list %}
+        <tr>
+        <td>{% if c14.sample %}<a href="{% url 'sample_detail' c14.sample.acad_num %}">{{ c14.sample.acad_num }}</a>{% endif %}</td>
+        <td>{{ c14.sampref }}</td>
+        <td>{{ c14.date }}</td>
+        <td>{% if c14.error %}{{ c14.error }}{% endif %}</td>
+        <td>{{ c14.centre }}-{{ c14.centre_num }}</td>
+        <td>{% if c14.del13 %}{{ c14.del13|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.del15 %}{{ c14.del15|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.cnratio %}{{ c14.cnratio|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.use_weight %}{{ c14.use_weight|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.pyield %}{{ c14.pyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.burnweight %}{{ c14.burnweight|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.burnyield %}{{ c14.burnyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.pcbyield %}{{ c14.pcbyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.nyield %}{{ c14.nyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.percent_c %}{{ c14.percent_c|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.mg_c %}{{ c14.mg_c|floatcutzeroes }}{% endif %}</td>
+        <td>
+            <a class="btn btn-xs btn-warning" href="{% url 'c14_edit' c14.slug %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            <button type="button" class="btn btn-xs btn-danger deletec14" val="{{ c14.slug }}" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'c14_create' %}">Add carbon date</a>
+<a class="btn btn-info" href="{% url 'upload_c14' %}">Upload carbon dates</a></p>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(document).on('click','.deletec14', function() {
+            val = $(this).attr("val");
+            if(confirm("Are you sure you want to delete " + val + "?")) {
+                $.ajax({
+                    headers: {'X-CSRFToken': '{{csrf_token}}'},
+                    type: 'DELETE',
+                    url: '/ajax/delete_c14/' + val,
+                    success: function(data) {
+                        if (data.status == "success") {
+                            $('#table').load('{% url "c14_index" %} #table > *');
+                        } else {
+                            alert("Can't delete: " + data.message);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

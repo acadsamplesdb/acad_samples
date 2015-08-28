@@ -1,0 +1,18 @@
+<table class="table table-striped">
+    <tr>
+        <th>Extraction</th>
+        <th>Samples</th>
+    </tr>
+    {% for extraction in extraction_list %}
+    <tr>
+        <td><a href="{% url 'extraction_detail' extraction.id %}">{{ extraction }}</a></td>
+        <td>
+            <ul class="list-unstyled">
+            {% for result in extraction.extractresult_set.all %}
+            <li><a href="{% url 'sample_detail' result.sample.acad_num %}">{{ result.sample }}</a></li>
+            {% endfor %}
+            </ul>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

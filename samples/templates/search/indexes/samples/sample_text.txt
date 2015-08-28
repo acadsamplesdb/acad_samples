@@ -1,0 +1,27 @@
+{{ object.acad_num }}
+{{ object.other_num }}
+{{ object.group }}
+{{ object.category }}
+{{ object.extracted_by_date }}
+{{ object.acad_location }}
+{{ object.abc_num }}
+{{ object.organism }}
+{{ object.common_name }}
+{{ object.genus }}
+{{ object.species }}
+{{ object.subspecies }}
+{{ object.notes }}
+{{ object.region }}
+{{ object.country }}
+{{ object.state }}
+{{ object.locality }}
+{{ object.location }}
+{{ object.collected_by }}
+{{ object.museum }}
+{{ object.museum_num }}
+{{ object.sampled_by }}
+{{ object.mismatch_reason }}
+{{ object.sample_repat }}
+{% for e in object.extractresult_set.all %}
+    {{ e.extraction.extracted_by }}
+{% endfor %}

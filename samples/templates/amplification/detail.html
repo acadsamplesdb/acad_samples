@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ amplification }}{% endblock %}
+
+{% block content %}
+<h1>{{ amplification }}</h1>
+<table class="table">
+    <tr><th>Date</th><td>{{ amplification.date }}</td></tr>
+    <tr><th>Prepared by</th><td>{{ amplification.prepared_by }}</td></tr>
+    <tr><th>Amplification type</th><td>{{ amplification.amp_type }}</td>
+    <tr><th>Method</th><td>{{ amplification.method }}</td></tr>
+    <tr><th>Notes</th><td>{{ amplification.notes }}</td></tr>
+</table>
+
+<p><a class="btn btn-warning" href="{% url 'amplification_edit' amplification.id %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'amplification_delete' amplification.id %}">Delete me</a></p>
+
+<h2>Amplification results</h2>
+<table class="table table-striped" id="resultstable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Extract result</th>
+            <th>Sample</th>
+            <th>DNA yield</th>
+            <th>Quantification method</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    {% if results %}
+    <tbody>
+    {% for result in results %}
+        <tr id="{{ result.id }}">
+            <td>{{ result.id }}</td>
+            <td><a href="{% url 'extraction_detail' result.extractresult.extraction_id %}#{{ result.extractresult.id }}">{{ result.extractresult }}</a></td>
+            <td><a href="{% url 'sample_detail' result.extractresult.sample.acad_num %}">{{ result.extractresult.sample }}</a></td>
+            <td>{% if result.dna_yield %}{{ result.dna_yield }}{% endif %}</td>
+            <td>{% if result.quant_method %}{{ result.quant_method }}{% endif %}</td>
+            <td>
+                <a class="btn btn-xs btn-warning" href="{% url 'amplificationresult_edit' result.id %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                <button type="button" class="btn btn-xs btn-danger deleteresult" val="{{result.id}}" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    {% endif %}
+</table>
+
+<a class="btn btn-primary btn-xs" role="button" data-toggle="collapse" href="#addresult" aria-expanded="false" aria-controls="addresult"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+
+<div class="row"><div class="col-xs-4 collapse" id="addresult">
+<div class="well">
+<p><b>Add a result</b></p>
+<form action="{% url 'amplification_addresult' amplification.id %}" method="post" id="addresultform">
+    {% crispy addresultform %}
+    <p><input class="btn btn-success" type="submit" value="Submit" />
+    <input class="btn" type="reset" value="Reset" /></p>
+</form>
+</div>
+</div></div>
+
+<h2 id="files">Files</h2>
+<ul>
+    {% for file in amplification.file.all %}
+    <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="row"><div class="col-xs-4">
+<div class="well">
+<p><b>Attach a file</b></p>
+<form action="{% url 'amplification_attachfile' amplification.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="next" value="{{ amplification.get_absolute_url }}">
+        <input id="id_file" name="file" type="file" />
+    </div>
+    <input class="btn btn-success" type="submit" value="Upload" />
+</form>
+</div>
+</div></div>
+{% if sequence_list %}
+<h2>Sequences</h2>
+<p>This amplification used in:
+<ul>
+    {% for sequence in sequence_list %}
+    <li><a href="{% url 'sequence_detail' sequence.id %}">{{ sequence }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    var addform = $('#addresultform');
+    $(document).ready(function() {
+        addform.submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'amplification_addresult' amplification.id %}',
+                data: addform.serialize(),
+                encode: true,
+                dataType: 'json',
+                headers: {'X-CSRFToken': '{{csrf_token}}'},
+                success: function(data) {
+                    $('#resultstable').load('{% url "amplification_detail" amplification.id %} #resultstable > *');
+                    addform.load('{% url "amplification_detail" amplification.id %} #addresultform > *'); // hacky way of resetting form back to default state, rather than clearing error stuff manually
+                },
+                error: function(data) {
+                    var response = $.parseJSON(data.responseText);
+                    if (response.errors.extractresult) {
+                        if (! (addform.find('#div_id_extractresult').hasClass('has-error'))) {
+                            addform.find('#div_id_extractresult').addClass('has-error');
+                            addform.find('#div_id_extractresult').append('<div class="help-block">' + response.errors.extractresult + '</div>');
+                        }
+                    }
+                }
+            });
+        });
+        $(document).on('click','.deleteresult', function() {
+            val = $(this).attr("val");
+            if(confirm("Are you sure you want to delete " + val + "?")) {
+                $.ajax({
+                    headers: {'X-CSRFToken': '{{csrf_token}}'},
+                    type: 'DELETE',
+                    url: '/ajax/delete_amplificationresult/' + val,
+                    success: function(data) {
+                        if (data.status == "success") {
+                            $('#resultstable').load('{% url "amplification_detail" amplification.id %} #resultstable > *');
+                        } else {
+                            alert("Can't delete: " + data.message);
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+{% endblock %}

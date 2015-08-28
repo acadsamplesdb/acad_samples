@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block title %}home page{% endblock %}
+{% block content %}
+<div class="jumbotron">
+    <h1>ACAD Samples Database</h1>
+    <img src="{% static 'images/Skeleton.svg' %}" style="width: 30%; float: right;">
+
+    {% if not user.is_authenticated %}
+    <p>You probably want to <a href="{% url 'login' %}">log in</a> before you do anything.</p>
+    {% else %}<p>You're logged in as '{{ user }}'.</p>
+    {% endif %}
+</div>
+{% endblock %}

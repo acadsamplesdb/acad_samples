@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{% if object %}{{ object.get_full_name }}
+{% else %}User
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+<ul class="messages list-unstyled">
+    {% for message in messages %}
+    <li class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}"{% endif %}>{{ message }} <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h1>
+    {% if object %}{{ object.get_full_name }}
+    {% else %}User
+    {% endif %}
+</h1>
+<div class="row">
+<div class="col-xs-8">
+<form action="" method="post">
+    {% crispy form %}
+    <div class="form-group">
+        <input class="btn btn-success" type="submit" value="Submit" />
+        <input class="btn" type="reset" value="Reset" />
+    </div>
+</form>
+</div>
+</div>
+<p><a href="{% url 'password_change' %}"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;Change my password</a></p>
+{% endblock %}

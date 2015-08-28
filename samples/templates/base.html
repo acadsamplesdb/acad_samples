@@ -1,0 +1,90 @@
+{% load static from staticfiles %}
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/yeti/bootstrap.min.css" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.min.css" />
+        <link rel="stylesheet" href="{% static "css/bootstrap-sortable.css" %}" />
+        <style type="text/css">
+            nav span.glyphicon { padding-right: 0.5em; }
+        </style>
+		<title>ACAD Samples: {% block title %}{% endblock %}</title>
+	</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+                <a href="{% url 'index' %}" class="navbar-brand">ACAD Samples</a>
+			</div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Samples&nbsp;<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'sample_index' %}">Samples</a></li>
+                        <li><a href="{% url 'c14_index' %}">Carbon dates</a></li>
+                        <li><a href="{% url 'samplegroup_index' %}">AQIS sample groups</a></li>
+                        <li><a href="{% url 'permit_index' %}">Permits</a></li>
+                        <li><a href="{% url 'organism_index' %}">Organisms</a></li>
+                    </ul>
+                </li>
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Lab&nbsp;<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'extraction_index' %}">Extractions</a></li>
+                        <li><a href="{% url 'amplification_index' %}">Amplifications</a></li>
+                        <li><a href="{% url 'enrichment_index' %}">Enrichments</a></li>
+                        <li><a href="{% url 'sequence_index' %}">Sequencing</a></li>
+                    </ul>
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Projects&nbsp;<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'project_index' %}">Projects</a></li>
+                        <li><a href="{% url 'usergroup_index' %}">User groups</a></li>
+                    </ul>
+                <li><a href="{% url 'search' %}">Search</a></li>
+            </ul>
+            {% if user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ user }}&nbsp;<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'myaccount' %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>My account</a></li>
+                        <li><a href="{% url 'password_change' %}"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>Change password</a></li>
+                        {% if user.is_superuser %}
+                        <li><a href="{% url 'admin:index' %}"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>Admin backend</a><li>
+                        <li><a href="{% url 'file_index' %}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>File manager</a>
+                        {% endif %}
+                        <li><a href="{% url 'logout' %}?next={{ request.path }}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {% else %}
+            <a class="btn btn-sm btn-info navbar-btn navbar-right" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Log in</a>
+            {% endif %}
+            </div>
+		</div>
+	</nav>
+
+	<div id="main" class="container">
+        {% block content %}
+        {% endblock %}
+	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{% static "js/bootstrap-sortable.js" %}"></script>
+    <script src="{% static "js/moment.min.js" %}"></script>
+    {% block script %}
+    {% endblock %}
+</body>
+</html>

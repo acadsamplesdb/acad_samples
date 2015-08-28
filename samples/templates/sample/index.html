@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Samples{% endblock %}
+
+{% block content %}
+<h1>Samples</h1>
+
+{% if sample_list %}
+{% include "sample/sample_table.html" with sampleform=True %}
+{% endif %}
+
+<nav>
+    <ul class="pagination">
+        <li>
+        {% if prevpage %}
+        <a href="?page={{prevpage}}{% if step %}&step={{step}}{%endif%}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        {% endif %}
+        </li>
+        {% if pagedict %}
+            {% for p, range in pagedict.items %}
+            <li{% if p == page %} class="active"{% endif %}><a href="?page={{p}}{% if step%}&step={{step}}{%endif%}">{{range.0}}&mdash;{{range.1}}</a></li>
+            {% endfor %}
+        {% endif %}
+        <li>
+        {% if nextpage %}<a href="?page={{nextpage}}{% if step %}&step={{step}}{%endif%}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>{% endif %}
+        </li>
+  </ul>
+</nav>
+
+<p>
+<form method="get" action="" class="form-inline">
+    <label class="control-label">Samples per page:</label>
+    <input type="text" name="step" size="4" value="{% if step %}{{ step }}{% else %}20{% endif %}" class="form-control">
+    <input type="submit" class="btn btn-success" value="Go" />
+</form>
+</p>
+
+<p><a class="btn btn-primary" href="{% url 'sample_create' %}">Add sample</a>
+<a class="btn btn-info" href="{% url 'upload_samples' %}">Upload samples</a></p>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    $(document).on('click', '#checkalltoggle', function() {
+        if ($('#checkalltoggle').prop('checked') == true) {
+            $('#samples').find('input[name="check"]').prop('checked', true);
+        }
+        else {
+            $('#samples').find('input[name="check"]').prop('checked', false);
+        }
+    });
+</script>
+{% endblock %}

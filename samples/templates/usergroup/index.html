@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}User groups{% endblock %}
+{% block content %}
+<h1>User groups</h1>
+{% if group_dict %}
+<ul>
+    {% for group,users in group_dict.items %}
+    <li><a href="{% url 'usergroup_detail' group.id %}">{{ group }}</a></li>
+    <ul>
+        {% for user in users %}
+        <li>{{ user }}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'usergroup_create' %}">Add user group</a></p>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Enrichment{% endblock %}
+{% block content %}
+<h1>Enrichment</h1>
+{% if enrichment_list %}
+<ul>
+    {% for enrichment in enrichment_list %}
+    <li><a href="{% url 'enrichment_detail' enrichment.id %}">{{ enrichment }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'enrichment_create' %}">Add enrichment</a></p>
+{% endblock %}

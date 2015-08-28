@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Permits{% endblock %}
+{% block content %}
+<h1>Permits</h1>
+{% if permit_list %}
+<ul>
+    {% for permit in permit_list %}
+    <li><a href="{% url 'permit_detail' permit.id %}">{{ permit }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'permit_create' %}">Add permit</a></p>
+{% endblock %}

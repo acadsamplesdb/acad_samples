@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}File attachments{% endblock %}
+{% block content %}
+<h1>Files</h1>
+{% if fileattachment_list %}
+<table class="table table-striped" id="filetable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Attached to</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fileattachment in fileattachment_list %}
+        <tr>
+            <td><a href="{% url 'download_file' fileattachment.id %}">{{ fileattachment }}</a></td>
+            <td>{{ fileattachment.size|filesizeformat }}</td>
+            <td>
+                <ul class="list-unstyled">
+                {% for attachment in fileattachment.get_attached_objects %}
+                <li><a href="{{ attachment.get_absolute_url }}">{{ attachment }}</a></li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td><button type="button" class="btn btn-xs btn-danger deletefile" val="{{ fileattachment.id }}" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(document).on('click','.deletefile', function() {
+            val = $(this).attr("val");
+            if(confirm("Are you sure you want to delete this file?")) {
+                $.ajax({
+                    headers: {'X-CSRFToken': '{{csrf_token}}'},
+                    type: 'DELETE',
+                    url: '/ajax/delete_file/' + val,
+                    success: function(data) {
+                        if (data.status == "success") {
+                            $('#filetable').load('{% url "file_index" %} #filetable > *');
+                        } else {
+                            alert("Can't delete: " + data.message);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

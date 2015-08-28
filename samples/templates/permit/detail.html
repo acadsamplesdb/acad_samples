@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ permit }}{% endblock %}
+{% block content %}
+<h1>{{ permit }}</h1>
+<table class="table">
+    <tr><th>Permit number</th><td>{{ permit.permit_num }}</</td></tr>
+    <tr><th>Valid from</th><td>{{ permit.valid_from }}</</td></tr>
+    <tr><th>Valid to</th><td>{{ permit.valid_to }}</</td></tr>
+    <tr><th>Valid for</th><td>{{ permit.valid_for }}</</td></tr>
+    <tr><th>Active from</th><td>{{ permit.active_from }}</</td></tr>
+    <tr><th>Conditions</th><td>{{ permit.conditions }}</</td></tr>
+    <tr><th>QAP</th><td>{{ permit.qap }}</</td></tr>
+    <tr><th>Files</th>
+        <td><ul class="list-unstyled">
+            {% for file in permit.file.all %}
+            <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+            {% endfor%}
+        </ul>
+    </td></tr>
+    <tr><th>Sample groups</th>
+        <td><ul class="list-unstyled">
+                {% for group in permit.aqissamplegroup_set.all %}
+                <li><a href="{% url 'samplegroup_detail' group.group_num %}">{{ group }}</a></li>
+                {% endfor %}
+        </ul>
+    </td></tr>
+</table>
+<h2 id="files">Files</h2>
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible alert-link" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<ul>
+    {% for file in permit.file.all %}
+    <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="row"><div class="col-xs-4">
+<div class="well">
+<p><b>Attach a file</b></p>
+<form action="{% url 'permit_attachfile' permit.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="next" value="{{ permit.get_absolute_url }}">
+        <input id="id_file" name="file" type="file" />
+    </div>
+    <input class="btn btn-success" type="submit" value="Upload" />
+</form>
+</div>
+</div></div>
+<p><a class="btn btn-warning" href="{% url 'permit_edit' permit.id %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'permit_delete' permit.id %}">Delete me</a></p>
+{% endblock %}

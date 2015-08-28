@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ extraction }}{% endblock %}
+
+{% block content %}
+<h1>{{ extraction }}</h1>
+<table class="table">
+    <tr><th>Date</th><td>{{ extraction.date }}</td></tr>
+    <tr><th>Extracted by</th><td>{{ extraction.extracted_by }}</td></tr>
+    <tr><th>Method</th><td>{{ extraction.method }}</td></tr>
+    <tr><th>Extraction controls</th>
+    <td><ul class="list-unstyled">
+            {% for control in extraction.extract_control.all %}
+            <li><a href="{% url 'sample_detail' control.acad_num %}">{{ control }}</a></li>
+            {% endfor%}
+        </ul>
+    </td></tr>
+    <tr><th>Notes</th><td>{{ extraction.notes }}</td></tr>
+</table>
+<p><a class="btn btn-warning" href="{% url 'extraction_edit' extraction.id %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'extraction_delete' extraction.id %}">Delete me</a></p>
+
+<h2>Extraction results</h2>
+<table class="table table-striped" id="resultstable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Sample</th>
+            <th>Starting material</th>
+            <th>Final DNA volume (ul)</th>
+            <th>DNA yield</th>
+            <th>Quantification method</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    {% if results %}
+    <tbody>
+    {% for result in results %}
+        <tr id="{{ result.id }}">
+            <td>{{ result.id }}</td>
+            <td><a href="{% url 'sample_detail' result.sample.acad_num %}">{{ result.sample }}</a></td>
+            <td>{{ result.starting }}</td>
+            <td>{{ result.final_vol }}</td>
+            <td>{% if result.dna_yield %}{{ result.dna_yield }}{% endif %}</td>
+            <td>{% if result.quant_method %}{{ result.get_quant_method_display }}{% endif %}</td>
+            <td>
+                <a class="btn btn-xs btn-warning" href="{% url 'extractresult_edit' result.id %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                <button type="button" class="btn btn-xs btn-danger deleteresult" val="{{result.id}}" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    {% endif %}
+</table>
+
+<a class="btn btn-primary btn-xs" role="button" data-toggle="collapse" href="#addresult" aria-expanded="false" aria-controls="addresult"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+
+<div class="row"><div class="col-xs-4 collapse" id="addresult">
+<div class="well">
+<p><b>Add a result</b></p>
+<form action="{% url 'extraction_addresult' extraction.id %}" method="post" id="addresultform">
+    {% crispy addresultform %}
+    <p><input class="btn btn-success" type="submit" value="Submit" />
+    <input class="btn" type="reset" value="Reset" /></p>
+</form>
+</div>
+</div></div>
+
+<h2 id="files">Files</h2>
+<ul>
+    {% for file in extraction.file.all %}
+    <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="row"><div class="col-xs-4">
+<div class="well">
+<p><b>Attach a file</b></p>
+<form action="{% url 'extraction_attachfile' extraction.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="next" value="{{ extraction.get_absolute_url }}">
+        <input id="id_file" name="file" type="file" />
+    </div>
+    <input class="btn btn-success" type="submit" value="Upload" />
+</form>
+</div>
+</div></div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    var addform = $('#addresultform');
+    $(document).ready(function() {
+        addform.submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'extraction_addresult' extraction.id %}',
+                data: addform.serialize(),
+                encode: true,
+                dataType: 'json',
+                headers: {'X-CSRFToken': '{{csrf_token}}'},
+                success: function(data) {
+                    $('#resultstable').load('{% url "extraction_detail" extraction.id %} #resultstable > *');
+                    addform.load('{% url "extraction_detail" extraction.id %} #addresultform > *'); // hacky way of resetting form back to default state, rather than clearing error stuff manually
+                },
+                error: function(data) {
+                    var response = $.parseJSON(data.responseText);
+                    if (response.errors.sample) {
+                        if (! (addform.find('#div_id_sample').hasClass('has-error'))) {
+                            addform.find('#div_id_sample').addClass('has-error');
+                            addform.find('#div_id_sample').append('<div class="help-block">' + response.errors.sample + '</div>');
+                        }
+                    }
+                }
+            });
+        });
+        $(document).on('click','.deleteresult', function() {
+            val = $(this).attr("val");
+            if(confirm("Are you sure you want to delete " + val + "?")) {
+                $.ajax({
+                    headers: {'X-CSRFToken': '{{csrf_token}}'},
+                    type: 'DELETE',
+                    url: '/ajax/delete_extractresult/' + val,
+                    success: function(data) {
+                        if (data.status == "success") {
+                            $('#resultstable').load('{% url "extraction_detail" extraction.id %} #resultstable > *');
+                        } else {
+                            alert("Can't delete: " + data.message);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Upload results</h1>
+{% if sample_list %}
+<p>Ok I created/updated some samples:</p>
+<ul>
+    {% for sample in sample_list %}
+    <li><a href="{% url 'sample_detail' sample.acad_num %}">{{ sample }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if newgroup %}
+<p>And I made a new group <a href="{% url 'samplegroup_detail' newgroup.group_num %}">{{ newgroup }}</a></p>
+{% endif %}
+{% if reject_list %}
+<p>The following samples already existed and weren't added:</p>
+<ul>
+    {% for reject in reject_list %}
+    <li><a href="{% url 'sample_detail' reject.acad_num %}">{{ reject }}</a>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

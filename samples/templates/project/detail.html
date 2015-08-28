@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ project }}{% endblock %}
+{% block content %}
+<h1>{{ project }}</h1>
+{% if project.description %}
+<div class="jumbotron">
+    <p>{{ project.description }}</p>
+</div>
+{% endif %}
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#samples" role="tab" data-toggle="tab">Samples</a></li>
+    <li role="presentation"><a href="#extractions" role="tab" data-toggle="tab">Extractions</a></li>
+  </ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="samples">
+    {% include "sample/sample_table.html" with sampleform=True %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="extractions">
+    {% include "extraction/extraction_table.html" %}
+    </div>
+</div>
+
+<h2>Users/groups</h2>
+<ul>
+    {% for group in project.group.all %}
+    <li><a href="{% url 'usergroup_detail' group.id %}">{{ group.name }}</a></li>
+    {% endfor %}
+    {% for user in project.user.all %}
+    <li>{{ user }}</li>
+    {% endfor %}
+</ul>
+
+<p><a class="btn btn-warning" href="{% url 'project_edit' project.id %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'project_delete' project.id %}">Delete me</a></p>
+
+<h2 id="files">Files</h2>
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible alert-link" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<ul>
+    {% for file in project.file.all %}
+    <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="row"><div class="col-xs-4">
+<div class="well">
+<p><b>Attach a file</b></p>
+<form action="{% url 'project_attachfile' project.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="next" value="{{ project.get_absolute_url }}">
+        <input id="id_file" name="file" type="file" />
+    </div>
+    <input class="btn btn-success" type="submit" value="Upload" />
+</form>
+</div>
+</div></div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    $(document).on('click', '#checkalltoggle', function() {
+        if ($('#checkalltoggle').prop('checked') == true) {
+            $('#samples').find('input[name="check"]').prop('checked', true);
+        }
+        else {
+            $('#samples').find('input[name="check"]').prop('checked', false);
+        }
+    });
+</script>
+{% endblock %}

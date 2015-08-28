@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ sample }}{% endblock %}
+{% block content %}
+<h1>{{ sample }}</h1>
+
+<div>
+<table class="table">
+<tr><th>ACAD sample number</th><td>{{ sample.acad_num }}</td></tr>
+<tr><th>Other number</th><td>{{ sample.other_num }}</td></tr>
+<tr><th>Sample group</th><td>{% if sample.group %}<a href="{% url 'samplegroup_detail' sample.group_id %}">{{ sample.group }}{% endif %}</td>
+<tr><th>Sample notes</th><td>{{ sample.notes }}</td></tr>
+<tr><th>Category</th><td>{{ sample.category }}</td></tr>
+<tr><th>Extracted by/date</th><td>{{ sample.extracted_by_date }}</td></tr>
+<tr><th>ACAD location</th><td>{{ sample.acad_location }}</td></tr>
+<tr><th>Date of entry into ACAD</th><td>{{ sample.date_of_entry }}</td></tr>
+<tr><th>ABC/Oxford sample number</th><td>{{ sample.abc_num }}</td></tr>
+<tr><th>Organism</th><td>{% if sample.organism %}<a href="{% url 'organism_detail' sample.organism_id %}">{{ sample.organism }}</a>{% endif %}</td></tr>
+<tr><th>Common name</th><td>{{ sample.common_name }}</td></tr>
+<tr><th>Genus, species, subspecies</th><td>{{ sample.genus }} {{ sample.species }} {{ sample.subspecies }}</td>
+<tr><th>Region</th><td>{{ sample.region }}</td></tr>
+<tr><th>Country</th><td>{{ sample.country }}</td></tr>
+<tr><th>State</th><td>{{ sample.state }}</td></tr>
+<tr><th>Locality</th><td>{{ sample.locality }}</td></tr>
+<tr><th>Specific location</th><td>{{ sample.location }}</td></tr>
+<tr><th>Latitude/longitude</th><td>{% if sample.lat and sample.lon %}{{ sample.lat }}, {{ sample.lon}}{% endif %}{% if sample.datum %}&nbsp;({{ sample.datum }}){% endif %}</td></tr>
+<tr><th>Collection date</th><td>{% if sample.collection_date %}{{ sample.collection_date }}{% endif %}</td></tr>
+<tr><th>Collected by</th><td>{{ sample.collected_by }}</td></tr>
+<tr><th>Quality</th><td>{{ sample.quality }}</td></tr>
+<tr><th>Museum</th><td>{{ sample.museum }}</td></tr>
+<tr><th>Museum accession number</th><td>{{ sample.museum_num }}</td></tr>
+<tr><th>Sampled by</th><td>{{ sample.sampled_by }}</td></tr>
+<tr><th>Sample date</th><td>{% if sample.sample_date %}{{ sample.sample_date }}{% endif %}</td></tr>
+<tr><th>Mismatch reason</th><td>{{ sample.mismatch_reason }}</td></tr>
+<tr><th>Sample repatriated</th><td>{{ sample.sample_repat }}</td></tr>
+</table>
+</div>
+
+<p><a class="btn btn-warning" href="{% url 'sample_edit' sample.acad_num %}">Edit me</a>
+<a class="btn btn-danger" href="{% url 'sample_delete' sample.acad_num %}">Delete me</a>
+<a class="btn btn-default" href="{% url 'sample_export_csv' sample.acad_num %}">Export as CSV</a></p>
+
+<h2 id="files">Files</h2>
+<ul>
+    {% for file in sample.file.all %}
+    <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="row"><div class="col-xs-4">
+<div class="well">
+<p><b>Attach a file</b></p>
+<form action="{% url 'sample_attachfile' sample.acad_num %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="next" value="{{ sample.get_absolute_url }}">
+        <input id="id_file" name="file" type="file" />
+    </div>
+    <input class="btn btn-success" type="submit" value="Upload" />
+</form>
+</div>
+</div></div>
+
+<h2>Extractions</h2>
+{% if extraction_list %}
+<p>This sample used in:
+<ul>
+    {% for extraction in extraction_list %}
+    <li><a href="{% url 'extraction_detail' extraction.id %}">{{ extraction }}</a></li>
+    {% endfor %}
+</ul>
+{% else%}<p>This sample hasn't been extracted yet</p>
+{% endif %}
+
+{% if c14_list %}
+<h2>Carbon date</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Sample reference</th>
+            <th>Date</th>
+            <th>Error</th>
+            <th>Centre+ID</th>
+            <th>del13</th>
+            <th>del15</th>
+            <th>cnratio</th>
+            <th>use_weight</th>
+            <th>pyield</th>
+            <th>burnweight</th>
+            <th>burnyield</th>
+            <th>pcbyield</th>
+            <th>nyield</th>
+            <th>percent_c</th>
+            <th>mg_c</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c14 in c14_list %}
+    <tr>
+        <td>{{ c14.sampref }}</td>
+        <td>{{ c14.date }}</td>
+        <td>{{ c14.error }}</td>
+        <td>{{ c14.centre }}-{{ c14.centre_num }}</td>
+        <td>{{ c14.del13 }}</td>
+        <td>{{ c14.del15 }}</td>
+        <td>{{ c14.cnratio }}</td>
+        <td>{{ c14.use_weight }}</td>
+        <td>{{ c14.pyield }}</td>
+        <td>{{ c14.burnweight }}</td>
+        <td>{{ c14.burnyield }}</td>
+        <td>{{ c14.pcbyield }}</td>
+        <td>{{ c14.nyield }}</td>
+        <td>{% if c14.percent_c %}{{ c14.percent_c }}{% endif %}</td>
+        <td>{% if c14.mg_c %}{{ c14.mg_c }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

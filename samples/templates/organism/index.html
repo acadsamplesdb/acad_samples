@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Organisms{% endblock %}
+{% block content %}
+<h1>Organism</h1>
+{% if organism_list %}
+<table class="table table-striped">
+    <tr>
+        <th>Taxonomy #</th>
+        <th>Genus</th>
+        <th>Species</th>
+        <th>Subspecies</th>
+        <th>Common name</th>
+        <th>&nbsp;</th>
+    </tr>
+    {% for organism in organism_list %}
+    <tr>
+        <td><a href="{% url 'organism_detail' organism.id %}">{{ organism.id }}</a></td>
+        <td>{{ organism.genus }}</td>
+        <td>{{ organism.species }}</td>
+        <td>{{ organism.subspecies }}</td>
+        <td>{{ organism.common }}</td>
+        <td><a class="btn btn-xs btn-warning" href="{% url 'organism_edit' organism.id %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+<p><a class="btn btn-primary" href="{% url 'organism_create' %}">Add organism</a></p>
+{% endblock %}
