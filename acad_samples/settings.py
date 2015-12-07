@@ -15,18 +15,13 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_z7@*)*rj1!_m)rls#!60u&zf*ff_&c((nfxhf9!2_t2^#0s)('
+SECRET_KEY = os.environ["ACAD_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [ ".oagr.org.au" ]
 
 # Application definition
 
@@ -81,8 +76,8 @@ WSGI_APPLICATION = 'acad_samples.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'samples'
     }
 }
 
@@ -116,7 +111,7 @@ LOGIN_EXEMPT_URLS = (
 )
 
 # numMb x 1024 x 1024
-MAX_UPLOAD_SIZE = 6291456
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -129,6 +124,11 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # HCP Object Storage
 import os, base64, hashlib
+
+import ssl
+if hasattr(ssl, '_create_unverified_context'):
+    ssl._create_default_https_context = ssl._create_unverified_context
+
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = base64.b64encode(bytearray(os.environ["AWS_ACCESS_KEY_ID"], encoding="utf-8")).decode("utf-8")
 AWS_SECRET_ACCESS_KEY = hashlib.md5(bytearray(os.environ["AWS_SECRET_ACCESS_KEY"], encoding="utf-8")).hexdigest()
