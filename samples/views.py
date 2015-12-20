@@ -610,7 +610,6 @@ def upload_samples(request):
                     if Sample.objects.filter(acad_num=obj.object.pk) and not force_update:
                         rejects.append(obj.object)
                     else:
-                        obj.save()
                         newobjs.append(obj.object)
                         if obj.object.group_id and not AQISSampleGroup.objects.filter(group_num=obj.object.group_id):
                             AQISSampleGroup.objects.create(group_num=obj.object.group_id)
@@ -622,11 +621,13 @@ def upload_samples(request):
                 for newobj in newobjs:
                     if not newobj.group:
                         newobj.group = newgroup
-                        newobj.save()
                 newgroup.description = form.cleaned_data["group_description"]
                 newgroup.origin = form.cleaned_data["group_origin"]
                 newgroup.quantity = len(newobjs)
                 newgroup.save()
+
+            for newobj in newobjs:
+                newobj.save()
 
             context = {"sample_list": newobjs, "reject_list": rejects}
             if newgroup:
