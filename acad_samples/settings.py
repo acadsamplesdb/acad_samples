@@ -23,6 +23,27 @@ DEBUG = False
 
 ALLOWED_HOSTS = [ ".oagr.org.au" ]
 
+# Basic logging - at least until v1 is done.
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/data/samples/django.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = (
