@@ -21,6 +21,8 @@ SECRET_KEY = os.environ["ACAD_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+ATOMIC_REQUESTS = True
+
 ALLOWED_HOSTS = [ ".oagr.org.au" ]
 
 # Basic logging - at least until v1 is done.
