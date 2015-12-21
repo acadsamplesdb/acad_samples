@@ -19,6 +19,9 @@ class Organism(models.Model):
         return (" ").join(filter(None, [self.genus, self.species, self.subspecies]))
 
 class Sample(models.Model):
+    class Meta:
+        ordering = ["acad_num"]
+
     acad_num = models.AutoField("ACAD sample number", primary_key=True)
     other_num = models.CharField("Other sample number", max_length=2048, blank=True)
     group = models.ForeignKey("AQISSampleGroup", blank=True, null=True, on_delete=models.SET_NULL)

@@ -15,7 +15,7 @@ def index(request):
     return render(request, "index.html")
 
 def sample_index(request):
-    default_step = 20
+    default_step = 100
 
     if "step" in request.GET and int(request.GET["step"]) > 0:
         step = int(request.GET["step"])
