@@ -49,6 +49,10 @@ class ReadFromExcel(object):
                         value = str(value).lstrip("GP")
                         import re
                         value = re.sub(r"^0+", "", value)
+                        # If there's nothing numeric remaining, prepend a zero.
+                        # No, this isn't going to win any prizes for elegance.
+                        if value == "" or value[0] not in string.digits:
+                            value = "0" + value
 
                 """ Workaround for date fields without full year-month-day dates """
                 if sheet.name.lower() == "sample":
