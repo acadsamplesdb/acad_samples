@@ -429,7 +429,7 @@ class C14EditForm(forms.ModelForm):
 class UploadSamplesFileForm(forms.Form):
     file = forms.FileField(label="Upload your samples source file")
     force_update = forms.BooleanField(label="Update samples that already exist", required=False, initial=False)
-    makeagroup = forms.BooleanField(label="Make a new AQIS group from these samples?", required=False, initial=True)
+    makeagroup = forms.BooleanField(label="Make a new AQIS group from these samples?", required=False, initial=False)
     group_description = forms.CharField(label="Description for group", required=False)
     group_origin = forms.CharField(label="Country of origin", required=False)
 

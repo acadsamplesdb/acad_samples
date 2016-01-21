@@ -1,6 +1,7 @@
 import argparse
 import xlrd
 import json
+import string
 
 
 class ReadFromExcel(object):

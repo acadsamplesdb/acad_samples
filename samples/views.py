@@ -182,6 +182,13 @@ class SampleDelete(DeleteView):
     template_name = "sample/sample_delete.html"
     success_url = reverse_lazy("sample_index")
 
+    def get_object(self, queryset=None):
+        from django.core.exceptions import PermissionDenied
+        obj = super(SampleDelete, self).get_object(queryset)
+        if obj.is_extracted() and not self.request.user.is_superuser:
+            raise PermissionDenied
+        return obj
+
 class SampleGroupCreate(CreateView):
     model = AQISSampleGroup
     form_class = samples.forms.SampleGroupAddForm
@@ -582,6 +589,15 @@ def delete_c14(request, slug):
 
     return JsonResponse({"status": "success"})
 
+#Used to check if samples.sample has pk
+def _check_sample_pk(jsondata):
+    import json
+    objects = json.loads(jsondata)
+    for obj in objects:
+        if obj['model'] == 'samples.sample' and 'pk' in obj:
+            return True
+    return False
+
 def upload_samples(request):
     if request.method == "POST":
         form = samples.forms.UploadSamplesFileForm(request.POST, request.FILES)
@@ -595,11 +611,13 @@ def upload_samples(request):
             except Exception:
                 return HttpResponse("problem with input data")
             jsondata = excel.json_from_sheets()
+            if not request.user.is_superuser and _check_sample_pk(jsondata):
+                return HttpResponse("Your user permission does not allow to have acad_num in uploading spreadsheet.")
 
             newobjs = []
             rejects = []
             force_update = False
-            if form.cleaned_data["force_update"]:
+            if request.user.is_superuser and form.cleaned_data["force_update"]:
                 force_update = True
             newgroup = False
 
@@ -638,6 +656,8 @@ def upload_samples(request):
 
     else:
         form = samples.forms.UploadSamplesFileForm()
+        if not request.user.is_superuser:
+            del form.fields['force_update']
         return render(request, "upload_samples.html", {"form": form})
 
 def upload_c14(request):

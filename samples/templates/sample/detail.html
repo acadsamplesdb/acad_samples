@@ -36,7 +36,9 @@
 </div>
 
 <p><a class="btn btn-warning" href="{% url 'sample_edit' sample.acad_num %}">Edit me</a>
+{% if request.user.is_superuser or not extraction_list %}
 <a class="btn btn-danger" href="{% url 'sample_delete' sample.acad_num %}">Delete me</a>
+{% endif %}
 <a class="btn btn-default" href="{% url 'sample_export_csv' sample.acad_num %}">Export as CSV</a></p>
 
 <h2 id="files">Files</h2>
