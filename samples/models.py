@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.db import models
 from django.core.urlresolvers import reverse_lazy
 
@@ -88,6 +89,22 @@ class Sample(models.Model):
     def is_carbondated(self):
         if C14.objects.filter(sample=self.acad_num):
             return True
+        else:
+            return False
+
+    def is_amplified(self):
+        return len(AmplificationResult.objects.filter(extractresult__sample__acad_num=self.acad_num)) > 0
+
+    def is_enriched(self):
+        return len(EnrichmentResult.objects.filter(ampresult__extractresult__sample__acad_num=self.acad_num)) > 0
+
+    def is_sequenced(self):
+        if self.is_amplified() and self.is_enriched():
+            amp_rslts = AmplificationResult.objects.filter(extractresult__sample__acad_num=self.acad_num)
+            amps = (rslt.amplification for rslt in amp_rslts)
+            enr_rslts = EnrichmentResult.objects.filter(ampresult__extractresult__sample__acad_num=self.acad_num)
+            enrs = (rslt.enrichment for rslt in enr_rslts)
+            return len(Sequence.objects.filter(Q(amplification__in=amps) | Q(enrichment__in=enrs))) > 0
         else:
             return False
 

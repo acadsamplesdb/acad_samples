@@ -1,4 +1,19 @@
 {% if sampleform %}<form method=post action="{% url 'samples_table_form' %}">{% csrf_token %}{% endif %}
+
+<dl style="float:right;font-size:smaller; margin-left: 1%; width: 9%;">
+    <dt><span class="glyphicon glyphicon-star" aria-hidden="true" style="color: red;"></span></dt>
+    <dd>Extraction</dd>
+    <dt><span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green;"></span></span></dt>
+    <dd>Amplification</dd>
+    <dt><span class="glyphicon glyphicon-play-circle" aria-hidden="true" style="color: magenta;"></span></dt>
+    <dd>Enrichment</dd>
+    <dt><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: black;"></span></dt>
+    <dd>Sequencing</dd>
+    <dt><span class="glyphicon glyphicon-star" aria-hidden="true" style="color: blue;"></dt>
+    <dd>Carbon dated</dd>
+</dl>
+
+<div style="float:left;width:90%">
 <table class="table table-striped sortable" id="samples">
     <thead>
         <tr>
@@ -19,12 +34,18 @@
             <td>{{ sample.common_name }}</td>
             <td>{{ sample.category }}</td>
             <td>{{ sample.get_location }}</td>
-            <td>{% if sample.is_extracted %}<span class="glyphicon glyphicon-star" aria-hidden="true" style="color: red;"></span>{% endif %}{% if sample.is_carbondated %}<span class="glyphicon glyphicon-star" aria-hidden="true" style="color: blue;"></span>{% endif %}</td>
+            <td>{% if sample.is_extracted %}<span class="glyphicon glyphicon-star" aria-hidden="true" style="color: red;"></span>{% endif %}
+                {% if sample.is_carbondated %}<span class="glyphicon glyphicon-star" aria-hidden="true" style="color: blue;"></span>{% endif %}
+                {% if sample.is_amplified %}<span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green;"></span>{% endif %}
+                {% if sample.is_enriched %}<span class="glyphicon glyphicon-play-circle" aria-hidden="true" style="color: magenta;"></span>{% endif %}
+                {% if sample.is_sequenced %}<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: black;"></span>{% endif %}
+            </td>
             <td><a class="btn btn-xs btn-warning" href="{% url 'sample_edit' sample.acad_num %}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% if sampleform %}
 <select name="opt">
     <option value="csv">Export to CSV</option>
