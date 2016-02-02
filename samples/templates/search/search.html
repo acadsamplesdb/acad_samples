@@ -21,6 +21,30 @@
     {% else %}<p>No results found</p>
 {% endif %}
 
+{% else %}
+<div>
+    <p>&nbsp;</p>
+    <h4>Search keywords:</h4>
+    <p>acad_num, other_num, group, common_name, genus, species, subspecies, category, extracted_by_date
+    acad_location, date_of_entry, abc_num, description, region, country, state, locallity, location
+    lat, lon, datum, collection_date, collected_by, quality, museum, museum_num, sampled_by, sample_date
+    mismatch_reason, sample_repat, Import permit #</p>
+
+    <p>&nbsp;</p>
+    <h4>Examples</h4>
+    <p>List the sample with the ACAD number 20. Enter:
+    <code>acad_num:20</code></p>
+    <p>List all samples containing the common name Bison. Enter:
+    <code>common_name:Bison</code></p>
+    <p>List all samples containing Bison in any field. Enter:
+    <code>Bison</code></p>
+    <p>List all samples containing Bison or Pig in any field. Enter:
+    <code>bison OR pig</code></p>
+    <p>List all samples containing Bison and Russia in any field. Enter:
+    <code>Bison AND Russia</code></p>
+    <p>List all samples from the country Russia with the category Bone. Enter:
+    <code>country:russia category:bone</code></p>
+</div>
 {% endif %}
 {% endblock %}
 {% block script %}
