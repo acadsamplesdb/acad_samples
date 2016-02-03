@@ -69,6 +69,37 @@
     {% for extraction in extraction_list %}
     <li><a href="{% url 'extraction_detail' extraction.id %}">{{ extraction }}</a></li>
     {% endfor %}
+
+    {% if amplification_list %}
+    <li>
+        <h2>Amplification</h2>
+        <ul>
+            {% for amplification in amplification_list %}
+            <li><a href="{% url 'amplification_detail' amplification.id %}">{{ amplification }}</a></li>
+            {% endfor %}
+            {% if enrichment_list %}
+            <li>
+            <h2>Enrichment</h2>
+            <ul>
+                {% for enrichment in enrichment_list %}
+                <li><a href="{% url 'enrichment_detail' enrichment.id %}">{{ enrichment }}</a></li>
+                {% endfor %}
+                {% if sequence_list %}
+                <li>
+                    <h2>Sequencing</h2>
+                    <ul>
+                        {% for sequence in sequence_list %}
+                        <li><a href="{% url 'sequence_detail' sequence.id %}">{{ sequence }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+            </ul>
+            {% endif %}
+            </li>
+        </ul>
+    </li>
+    {% endif %}
 </ul>
 {% else%}<p>This sample hasn't been extracted yet</p>
 {% endif %}

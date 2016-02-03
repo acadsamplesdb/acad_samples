@@ -8,6 +8,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
 
+from django.db.models import Q
+
 from samples.models import Sample, Organism, Project, FileAttachment, AQISSampleGroup, Permit, Extraction, ExtractResult, Amplification, AmplificationResult, Enrichment, EnrichmentResult, Sequence, C14
 import samples.forms
 
@@ -62,7 +64,17 @@ def sample_detail(request, pk):
     else:
         extraction_list = Extraction.objects.filter(extractresult__sample=pk).distinct()
     c14_list = C14.objects.filter(sample=pk)
-    context = {"sample": sample, "extraction_list": extraction_list, "c14_list": c14_list}
+    amp_list = AmplificationResult.objects.filter(extractresult__sample__acad_num=sample.acad_num)
+    amps = [rslt.amplification for rslt in amp_list]
+    enr_list = EnrichmentResult.objects.filter(ampresult__extractresult__sample__acad_num=sample.acad_num)
+    enrs = [rslt.enrichment for rslt in enr_list]
+    seq_list = Sequence.objects.filter(Q(amplification__in=amps) | Q(enrichment__in=enrs))
+
+    context = {"sample": sample, "extraction_list": extraction_list, "c14_list": c14_list,
+               "amplification_list": frozenset(amps),
+               "enrichment_list": frozenset(enrs),
+               "sequence_list": seq_list
+              }
     return render(request, "sample/detail.html", context)
 
 def samplegroup_index(request):
