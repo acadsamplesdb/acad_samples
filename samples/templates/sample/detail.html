@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+{% load floatcutzeroes %}
 {% block title %}{{ sample }}{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+{% endblock %}
 {% block content %}
 <h1>{{ sample }}</h1>
 
@@ -44,7 +48,7 @@
 <h2 id="files">Files</h2>
 <ul>
     {% for file in sample.file.all %}
-    <li><a href="{% url 'download_file' file.id %}">{{ file }}</a></li>
+    <li><a href="{% url 'download_file' file.id %}">{% filetype_icon file.name %}{{ file }}</a></li>
     {% endfor %}
 </ul>
 
