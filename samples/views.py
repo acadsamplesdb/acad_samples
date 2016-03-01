@@ -801,7 +801,7 @@ def download_file(request, fileid):
     return response
 
 def file_index(request):
-    context = {"fileattachment_list": FileAttachment.objects.all().order_by("-size")}
+    context = {"fileattachment_list": FileAttachment.objects.all().order_by("name", "-size")}
     return render(request, "file/index.html", context)
 
 # ajaxy
