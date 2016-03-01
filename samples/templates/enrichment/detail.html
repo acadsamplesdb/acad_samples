@@ -126,7 +126,7 @@
                 $.ajax({
                     headers: {'X-CSRFToken': '{{csrf_token}}'},
                     type: 'DELETE',
-                    url: '/ajax/delete_enrichmentresult/' + val,
+                    url: '/ajax/delete_enrichmentresult/' + val + '/',
                     success: function(data) {
                         if (data.status == "success") {
                             $('#resultstable').load('{% url "enrichment_detail" enrichment.id %} #resultstable > *');

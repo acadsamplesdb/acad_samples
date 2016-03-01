@@ -124,7 +124,7 @@
                 $.ajax({
                     headers: {'X-CSRFToken': '{{csrf_token}}'},
                     type: 'DELETE',
-                    url: '/ajax/delete_amplificationresult/' + val,
+                    url: '/ajax/delete_amplificationresult/' + val + '/',
                     success: function(data) {
                         if (data.status == "success") {
                             $('#resultstable').load('{% url "amplification_detail" amplification.id %} #resultstable > *');

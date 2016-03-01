@@ -123,7 +123,7 @@
                 $.ajax({
                     headers: {'X-CSRFToken': '{{csrf_token}}'},
                     type: 'DELETE',
-                    url: '/ajax/delete_extractresult/' + val,
+                    url: '/ajax/delete_extractresult/' + val + '/',
                     success: function(data) {
                         if (data.status == "success") {
                             $('#resultstable').load('{% url "extraction_detail" extraction.id %} #resultstable > *');

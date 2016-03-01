@@ -40,7 +40,7 @@
                 $.ajax({
                     headers: {'X-CSRFToken': '{{csrf_token}}'},
                     type: 'DELETE',
-                    url: '/ajax/delete_file/' + val,
+                    url: '/ajax/delete_file/' + val + '/',
                     success: function(data) {
                         if (data.status == "success") {
                             $('#filetable').load('{% url "file_index" %} #filetable > *');
