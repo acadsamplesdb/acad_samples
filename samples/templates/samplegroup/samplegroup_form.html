@@ -27,6 +27,22 @@
 <script type="text/javascript">
 $(function () {
     $('.datepicker').datepicker({ format: 'yyyy-mm-dd'} );
+    $('#id_permit_num').prop('readonly', true);
+    $('#id_permit').change(function() {
+      try {
+        var permit_combo = $('#id_permit option:selected').text();
+        var permit_num = permit_combo.split(' ')[0];
+        if (permit_num.indexOf('--') !== -1) {
+            $('#id_permit_num').val('');
+        } else {
+            $('#id_permit_num').val(permit_num);
+        }
+      } catch (e) {
+          $('#id_permit_num').val('');
+          console.error("Cannot parse permit number: " + e);
+      }
+    });
 });
 </script>
 {% endblock %}
+
