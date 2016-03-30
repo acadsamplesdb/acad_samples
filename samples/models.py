@@ -150,7 +150,7 @@ class ExtractResult(models.Model):
     extraction = models.ForeignKey(Extraction)
     starting = models.CharField("Starting material", max_length=2048, blank=True)
     final_vol = models.CharField("Final DNA volume", help_text="(in ul)", max_length=2048, blank=True)
-    dna_yield = models.PositiveIntegerField(blank=True, null=True)
+    dna_yield = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     quant_method = models.CharField("Quantification method", max_length=2048, choices=QUANT_METHODS, blank=True)
 
     def __str__(self):
@@ -178,7 +178,7 @@ class AmplificationResult(models.Model):
     id = models.CharField(max_length=2048, primary_key=True, blank=True)
     extractresult = models.ForeignKey(ExtractResult)
     amplification = models.ForeignKey(Amplification)
-    dna_yield = models.PositiveIntegerField(blank=True, null=True)
+    dna_yield = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     quant_method = models.CharField("Quantification method", max_length=2048, blank=True)
 
     def __str__(self):
@@ -205,7 +205,7 @@ class EnrichmentResult(models.Model):
     enrichment = models.ForeignKey(Enrichment)
     enrich_type = models.CharField("Enrichment type", max_length=2048, help_text="e.g. Mito, 10k", blank=True)
     bait_detail = models.CharField("Bait detail", max_length=2048, help_text="MyBait batch number", blank=True)
-    dna_yield = models.PositiveIntegerField(blank=True, null=True)
+    dna_yield = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     quant_method = models.CharField("Quantification method", max_length=2048, blank=True)
 
     def __str__(self):
