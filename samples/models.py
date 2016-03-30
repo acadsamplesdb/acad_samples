@@ -235,7 +235,7 @@ class Permit(models.Model):
     valid_from = models.DateField("Valid from")
     valid_to = models.DateField("Valid to")
     valid_for = models.CharField("Valid for", max_length=2048)
-    active_from = models.DateField("Active from", blank=True, null=True)
+    active_from = models.DateField("Active from", null=True)
     conditions = models.TextField("Conditions", max_length=2048, blank=True)
     qap = models.CharField(max_length=2048, blank=True)
     file = models.ManyToManyField('FileAttachment', blank=True)

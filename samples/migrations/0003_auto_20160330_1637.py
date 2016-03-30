@@ -22,21 +22,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='amplificationresult',
             name='dna_yield',
-            field=models.DecimalField(decimal_places=2, null=True, max_digits=5, blank=True),
+            field=models.DecimalField(blank=True, decimal_places=2, null=True, max_digits=5),
         ),
         migrations.AlterField(
             model_name='enrichmentresult',
             name='dna_yield',
-            field=models.DecimalField(decimal_places=2, null=True, max_digits=5, blank=True),
+            field=models.DecimalField(blank=True, decimal_places=2, null=True, max_digits=5),
         ),
         migrations.AlterField(
             model_name='extractresult',
             name='dna_yield',
-            field=models.DecimalField(decimal_places=2, null=True, max_digits=5, blank=True),
+            field=models.DecimalField(blank=True, decimal_places=2, null=True, max_digits=5),
         ),
         migrations.AlterField(
             model_name='permit',
             name='active_from',
-            field=models.DateField(verbose_name='Active from', null=True, blank=True),
+            field=models.DateField(null=True, verbose_name='Active from'),
         ),
     ]
