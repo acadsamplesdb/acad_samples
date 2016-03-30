@@ -235,7 +235,7 @@ class Permit(models.Model):
     valid_from = models.DateField("Valid from")
     valid_to = models.DateField("Valid to")
     valid_for = models.CharField("Valid for", max_length=2048)
-    active_from = models.DateField("Active from", blank=True)
+    active_from = models.DateField("Active from", blank=True, null=True)
     conditions = models.TextField("Conditions", max_length=2048, blank=True)
     qap = models.CharField(max_length=2048, blank=True)
     file = models.ManyToManyField('FileAttachment', blank=True)
@@ -297,6 +297,9 @@ class FileAttachment(models.Model):
     file = models.FileField(upload_to="files")
     name = models.CharField("File name", max_length=2048, blank=True)
     size = models.PositiveIntegerField("File size", blank=True)
+
+    class Meta:
+        ordering = ["name", "size"]
 
     def __str__(self):
         return self.name
