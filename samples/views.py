@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -12,6 +13,12 @@ from django.db.models import Q
 
 from samples.models import Sample, Organism, Project, FileAttachment, AQISSampleGroup, Permit, Extraction, ExtractResult, Amplification, AmplificationResult, Enrichment, EnrichmentResult, Sequence, C14
 import samples.forms
+
+def is_topbuttons_required(num):
+    """Bridge templates and settings in terms if display top buttons"""
+    if hasattr(settings, 'TOP_BUTTONS_REQUIRED'):
+        return num >= settings.TOP_BUTTONS_REQUIRED
+    return False
 
 def index(request):
     return render(request, "index.html")
@@ -54,6 +61,7 @@ def sample_index(request):
         if p == numpages:
             pagedict[p][1] = len(Sample.objects.all())
     context["pagedict"] = pagedict
+    context["topbuttons"] = is_topbuttons_required(len(context["sample_list"]))
 
     return render(request, "sample/index.html", context)
 
@@ -79,6 +87,7 @@ def sample_detail(request, pk):
 
 def samplegroup_index(request):
     context = {"samplegroup_list": AQISSampleGroup.objects.all()}
+    context["topbuttons"] = is_topbuttons_required(len(context["samplegroup_list"]))
     return render(request, "samplegroup/index.html", context)
 
 def samplegroup_detail(request, pk):
@@ -88,10 +97,12 @@ def samplegroup_detail(request, pk):
 
 def c14_index(request):
     context = {"c14_list": C14.objects.all().order_by("-sample")}
+    context["topbuttons"] = is_topbuttons_required(len(context["c14_list"]))
     return render(request, "c14/index.html", context)
 
 def permit_index(request):
     context = {"permit_list": Permit.objects.all()}
+    context["topbuttons"] = is_topbuttons_required(len(context["permit_list"]))
     return render(request, "permit/index.html", context)
 
 def permit_detail(request, pk):
@@ -135,6 +146,7 @@ def project_detail(request, pk):
 
 def extraction_index(request):
     context = {"extraction_list": Extraction.objects.all()}
+    context["topbuttons"] = is_topbuttons_required(len(context["extraction_list"]))
     return render(request, "extraction/index.html", context)
 
 def extraction_detail(request, pk):
@@ -146,6 +158,7 @@ def extraction_detail(request, pk):
 
 def amplification_index(request):
     context = {"amplification_list": Amplification.objects.all()}
+    context["topbuttons"] = is_topbuttons_required(len(context["amplification_list"]))
     return render(request, "amplification/index.html", context)
 
 def amplification_detail(request, pk):
@@ -158,6 +171,7 @@ def amplification_detail(request, pk):
 
 def enrichment_index(request):
     context = {"enrichment_list": Enrichment.objects.all()}
+    context["topbuttons"] = is_topbuttons_required(len(context["enrichment_list"]))
     return render(request, "enrichment/index.html", context)
 
 def enrichment_detail(request, pk):
@@ -170,6 +184,7 @@ def enrichment_detail(request, pk):
 
 def sequence_index(request):
     context = {"sequence_list": Sequence.objects.all()}
+    context["topbuttons"] = is_topbuttons_required(len(context["sequence_list"]))
     return render(request, "sequence/index.html", context)
 
 def sequence_detail(request, pk):

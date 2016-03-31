@@ -3,6 +3,9 @@
 {% block content %}
 <h1>Amplification</h1>
 {% if amplification_list %}
+{% if topbuttons %}
+<p><a class="btn btn-primary" href="{% url 'amplification_create' %}">Add amplification</a></p>
+{% endif %}
 <ul>
     {% for amplification in amplification_list %}
     <li><a href="{% url 'amplification_detail' amplification.id %}">{{ amplification }}</a></li>

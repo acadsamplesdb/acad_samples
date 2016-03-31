@@ -4,6 +4,10 @@
 {% block content %}
 <h1>Carbon dates</h1>
 {% if c14_list %}
+{% if topbuttons %}
+<p><a class="btn btn-primary" href="{% url 'c14_create' %}">Add carbon date</a>
+<a class="btn btn-info" href="{% url 'upload_c14' %}">Upload carbon dates</a></p>
+{% endif %}
 <table class="table table-striped sortable" id="table">
     <thead>
         <tr>
