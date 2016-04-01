@@ -12,6 +12,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
+            name='amplification',
+            options={'ordering': ['-date']},
+        ),
+        migrations.AlterModelOptions(
+            name='extraction',
+            options={'ordering': ['-date']},
+        ),
+        migrations.AlterModelOptions(
             name='fileattachment',
             options={'ordering': ['name', 'size']},
         ),
@@ -22,21 +30,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='amplificationresult',
             name='dna_yield',
-            field=models.DecimalField(blank=True, decimal_places=2, null=True, max_digits=5),
+            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=5),
         ),
         migrations.AlterField(
             model_name='enrichmentresult',
             name='dna_yield',
-            field=models.DecimalField(blank=True, decimal_places=2, null=True, max_digits=5),
+            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=5),
         ),
         migrations.AlterField(
             model_name='extractresult',
             name='dna_yield',
-            field=models.DecimalField(blank=True, decimal_places=2, null=True, max_digits=5),
+            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=5),
         ),
         migrations.AlterField(
             model_name='permit',
             name='active_from',
-            field=models.DateField(null=True, verbose_name='Active from'),
+            field=models.DateField(verbose_name='Active from', null=True),
         ),
     ]

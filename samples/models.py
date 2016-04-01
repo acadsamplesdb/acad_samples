@@ -125,6 +125,9 @@ class Project(models.Model):
         return reverse_lazy("project_detail", kwargs={"pk": self.pk})
 
 class Extraction(models.Model):
+    class Meta:
+        ordering = ["-date"]
+
     date = models.DateField("Date extracted")
     extracted_by = models.CharField("Extracted by", max_length=2048)
     method = models.TextField("Extraction method")
@@ -160,6 +163,9 @@ class ExtractResult(models.Model):
         return reverse_lazy("extraction_detail", kwargs={"pk": self.extraction.pk})
 
 class Amplification(models.Model):
+    class Meta:
+        ordering = ["-date"]
+
     date = models.DateField("Date")
     prepared_by = models.CharField("Prepared by", max_length=2048)
     method = models.TextField("Method", help_text="e.g. library prep or PCR")
