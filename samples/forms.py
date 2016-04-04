@@ -183,7 +183,7 @@ class ExtractResultEditForm(forms.ModelForm):
     sample = forms.IntegerField(label="Sample number", widget=forms.TextInput(attrs={'readonly':'readonly'}))
     starting = forms.CharField(label="Starting material", required=False)
     final_vol = forms.CharField(label="Final DNA volume (in ul)", required=False)
-    dna_yield = forms.IntegerField(label="DNA yield", required=False)
+    dna_yield = forms.DecimalField(label="DNA yield", required=False, max_digits=5, decimal_places=2)
     from django.db.models.fields import BLANK_CHOICE_DASH
     quant_method = forms.ChoiceField(label="Quantification method", choices=BLANK_CHOICE_DASH + list(ExtractResult.QUANT_METHODS), required=False)
 
@@ -211,7 +211,7 @@ class ExtractionAddResultForm(forms.Form):
     sample = forms.IntegerField(label="Sample number")
     starting = forms.CharField(label="Starting material", required=False)
     final_vol = forms.CharField(label="Final DNA volume (in ul)", required=False)
-    dna_yield = forms.IntegerField(label="DNA yield", required=False)
+    dna_yield = forms.DecimalField(label="DNA yield", required=False, max_digits=5, decimal_places=2)
     from django.db.models.fields import BLANK_CHOICE_DASH
     quant_method = forms.ChoiceField(label="Quantification method", choices=BLANK_CHOICE_DASH + list(ExtractResult.QUANT_METHODS), required=False)
 
@@ -260,7 +260,7 @@ class AmplificationDeleteForm(forms.ModelForm):
 
 class AmplificationAddResultForm(forms.Form):
     extractresult = forms.CharField(label="Extract result id")
-    dna_yield = forms.IntegerField(label="DNA yield", required=False)
+    dna_yield = forms.DecimalField(label="DNA yield", required=False, max_digits=5, decimal_places=2)
     quant_method = forms.CharField(label="Quantification method", required=False)
 
     def __init__(self, *args, **kwargs):
@@ -281,7 +281,7 @@ class AmplificationAddResultForm(forms.Form):
 
 class AmplificationResultEditForm(forms.ModelForm):
     extractresult = forms.CharField(label="Extract result id", widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    dna_yield = forms.IntegerField(label="DNA yield", required=False)
+    dna_yield = forms.DecimalField(label="DNA yield", required=False, max_digits=5, decimal_places=2)
     quant_method = forms.CharField(label="Quantification method", required=False)
 
     class Meta:
@@ -335,7 +335,7 @@ class EnrichmentAddResultForm(forms.Form):
     ampresult = forms.CharField(label="Amplification result id")
     enrich_type = forms.CharField(label="Enrichment type", required=False)
     bait_detail = forms.CharField(label="Bait detail", required=False)
-    dna_yield = forms.IntegerField(label="DNA yield", required=False)
+    dna_yield = forms.DecimalField(label="DNA yield", required=False, max_digits=5, decimal_places=2)
     quant_method = forms.CharField(label="Quantification method", required=False)
 
     def __init__(self, *args, **kwargs):
@@ -358,7 +358,7 @@ class EnrichmentResultEditForm(forms.ModelForm):
     ampresult = forms.CharField(label="Amplification result id", widget=forms.TextInput(attrs={'readonly':'readonly'}))
     enrich_type = forms.CharField(label="Enrichment type", required=False)
     bait_detail = forms.CharField(label="Bait detail", required=False)
-    dna_yield = forms.IntegerField(label="DNA yield", required=False)
+    dna_yield = forms.DecimalField(label="DNA yield", required=False, max_digits=5, decimal_places=2)
     quant_method = forms.CharField(label="Quantification method", required=False)
 
     class Meta:

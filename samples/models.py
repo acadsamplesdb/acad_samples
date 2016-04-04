@@ -125,6 +125,9 @@ class Project(models.Model):
         return reverse_lazy("project_detail", kwargs={"pk": self.pk})
 
 class Extraction(models.Model):
+    class Meta:
+        ordering = ["-date"]
+
     date = models.DateField("Date extracted")
     extracted_by = models.CharField("Extracted by", max_length=2048)
     method = models.TextField("Extraction method")
@@ -150,7 +153,7 @@ class ExtractResult(models.Model):
     extraction = models.ForeignKey(Extraction)
     starting = models.CharField("Starting material", max_length=2048, blank=True)
     final_vol = models.CharField("Final DNA volume", help_text="(in ul)", max_length=2048, blank=True)
-    dna_yield = models.PositiveIntegerField(blank=True, null=True)
+    dna_yield = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     quant_method = models.CharField("Quantification method", max_length=2048, choices=QUANT_METHODS, blank=True)
 
     def __str__(self):
@@ -160,6 +163,9 @@ class ExtractResult(models.Model):
         return reverse_lazy("extraction_detail", kwargs={"pk": self.extraction.pk})
 
 class Amplification(models.Model):
+    class Meta:
+        ordering = ["-date"]
+
     date = models.DateField("Date")
     prepared_by = models.CharField("Prepared by", max_length=2048)
     method = models.TextField("Method", help_text="e.g. library prep or PCR")
@@ -178,7 +184,7 @@ class AmplificationResult(models.Model):
     id = models.CharField(max_length=2048, primary_key=True, blank=True)
     extractresult = models.ForeignKey(ExtractResult)
     amplification = models.ForeignKey(Amplification)
-    dna_yield = models.PositiveIntegerField(blank=True, null=True)
+    dna_yield = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     quant_method = models.CharField("Quantification method", max_length=2048, blank=True)
 
     def __str__(self):
@@ -205,7 +211,7 @@ class EnrichmentResult(models.Model):
     enrichment = models.ForeignKey(Enrichment)
     enrich_type = models.CharField("Enrichment type", max_length=2048, help_text="e.g. Mito, 10k", blank=True)
     bait_detail = models.CharField("Bait detail", max_length=2048, help_text="MyBait batch number", blank=True)
-    dna_yield = models.PositiveIntegerField(blank=True, null=True)
+    dna_yield = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
     quant_method = models.CharField("Quantification method", max_length=2048, blank=True)
 
     def __str__(self):
@@ -235,7 +241,7 @@ class Permit(models.Model):
     valid_from = models.DateField("Valid from")
     valid_to = models.DateField("Valid to")
     valid_for = models.CharField("Valid for", max_length=2048)
-    active_from = models.DateField("Active from", blank=True)
+    active_from = models.DateField("Active from", null=True)
     conditions = models.TextField("Conditions", max_length=2048, blank=True)
     qap = models.CharField(max_length=2048, blank=True)
     file = models.ManyToManyField('FileAttachment', blank=True)
@@ -297,6 +303,9 @@ class FileAttachment(models.Model):
     file = models.FileField(upload_to="files")
     name = models.CharField("File name", max_length=2048, blank=True)
     size = models.PositiveIntegerField("File size", blank=True)
+
+    class Meta:
+        ordering = ["name", "size"]
 
     def __str__(self):
         return self.name
