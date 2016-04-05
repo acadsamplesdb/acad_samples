@@ -40,6 +40,13 @@ class SampleDeleteForm(forms.ModelForm):
         model = Sample
         fields = "__all__"
 
+def _clean_group_num(data):
+    try:
+        data = int(data)
+    except ValueError:
+        raise forms.ValidationError("Only number is allowed")
+    return data
+
 class SampleGroupAddForm(forms.ModelForm):
     class Meta:
         model = AQISSampleGroup
@@ -51,6 +58,9 @@ class SampleGroupAddForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
+    def clean_group_num(self):
+        return _clean_group_num(self.cleaned_data['group_num'])
+
 class SampleGroupEditForm(forms.ModelForm):
     class Meta:
         model = AQISSampleGroup
@@ -61,6 +71,9 @@ class SampleGroupEditForm(forms.ModelForm):
         super(SampleGroupEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+
+    def clean_group_num(self):
+        return _clean_group_num(self.cleaned_data['group_num'])
 
 class SampleGroupDeleteForm(forms.ModelForm):
     class Meta:
