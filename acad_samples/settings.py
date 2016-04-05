@@ -161,4 +161,4 @@ AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
 AWS_S3_HOST = os.environ["AWS_S3_HOST"]
 
 #Minimal number of records displayed on a page before displaying buttons to top and bottom for convenience
-TOP_BUTTONS_REQUIRED = 100
+TOP_BUTTONS_REQUIRED = 10
