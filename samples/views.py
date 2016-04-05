@@ -638,7 +638,11 @@ def upload_samples(request):
                 excel = ReadFromExcel(request.FILES["file"].read())
             except Exception:
                 return HttpResponse("problem with input data")
-            jsondata = excel.json_from_sheets()
+            try:
+                jsondata = excel.json_from_sheets()
+            except Exception as e:
+                return HttpResponse("Cannot upload data: " + str(e))
+
             if not request.user.is_superuser and _check_sample_pk(jsondata):
                 return HttpResponse("Your user permission does not allow to have acad_num in uploading spreadsheet.")
 
@@ -735,7 +739,10 @@ def upload_samplegroups(request):
                 excel = ReadFromExcel(request.FILES["file"].read())
             except Exception:
                 return HttpResponse("problem with input data")
-            jsondata = excel.json_from_sheets()
+            try:
+                jsondata = excel.json_from_sheets()
+            except Exception as e:
+                return HttpResponse("Cannot upload data: " + str(e))
 
             from django.core.serializers import deserialize
             from django.core.serializers.base import DeserializationError

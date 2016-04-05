@@ -3,7 +3,6 @@ import xlrd
 import json
 import string
 
-
 class ReadFromExcel(object):
     """
     Read data from Excel source and return a JSON representation suitable for
@@ -59,23 +58,16 @@ class ReadFromExcel(object):
                 if sheet.name.lower() == "sample":
                     if cell_header == "collection_date" and value != "":
                         if cell_type != xlrd.XL_CELL_DATE:
-                            date_notes.append("Collection date: {}".format(value))
-                            value = ""
+                            raise ValueError("Collection date has to be in the format of yyyy-mm-dd")
                 if sheet.name.lower() == "sample":
                     if cell_header == "sample_date" and value != "":
                         if cell_type != xlrd.XL_CELL_DATE:
-                            date_notes.append("Sample date: {}".format(value))
-                            value = ""
+                            raise ValueError("Sample date has to be in the format of yyyy-mm-dd")
 
                 if sheet.name.lower() == "aqissamplegroup":
                     if cell_header == "group_num" and value != "":
-                        value = str(value).lstrip("GP")
-                        try:
-                            value = int(value)
-                        except ValueError:
-                            """ Ok, it's not an integer -- strip leading zeroes """
-                            import re
-                            value = re.sub(r"^0+", "", value)
+                        # Only number (like) is allow in this cell
+                        value = int(value)
 
                 if value != "":
                     field = cell_header.strip()
