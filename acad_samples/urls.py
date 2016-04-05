@@ -100,6 +100,7 @@ urlpatterns = [
     url(r'^download_file/(?P<fileid>\w+)$', views.download_file, name="download_file"),
 #
     url(r'^search/', views.MySearchView.as_view(), name='search'),
+    url(r'^ajax/search/', views.search, name='ajax_search'),
 #
     url(r'^ajax/delete_extractresult/(?P<result_id>\w+)/$', views.delete_extractresult, name="delete_extractresult"),
     url(r'^ajax/delete_amplificationresult/(?P<result_id>\w+)/$', views.delete_amplificationresult, name="delete_amplificationresult"),

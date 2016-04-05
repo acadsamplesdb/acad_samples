@@ -1,0 +1,67 @@
+{% if sampleform %}<form method=post action="{% url 'samples_table_form' %}">{% csrf_token %}{% endif %}
+
+<dl style="float:right;font-size:smaller; margin-left: 1%; width: 9%;">
+    <dt><span class="glyphicon glyphicon-star" aria-hidden="true" style="color: red;"></span></dt>
+    <dd>Extraction</dd>
+    <dt><span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green;"></span></span></dt>
+    <dd>Amplification</dd>
+    <dt><span class="glyphicon glyphicon-play-circle" aria-hidden="true" style="color: magenta;"></span></dt>
+    <dd>Enrichment</dd>
+    <dt><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: black;"></span></dt>
+    <dd>Sequencing</dd>
+    <dt><span class="glyphicon glyphicon-star" aria-hidden="true" style="color: blue;"></dt>
+    <dd>Carbon dated</dd>
+</dl>
+
+<div style="float:left;width:90%">
+{% verbatim %}
+<table class="table table-striped sortable" id="samples" v-show="sampleList.length > 0">
+    <thead>
+        <tr>
+            <th data-defaultsort="disabled" v-show="tickbox"><input type="checkbox" id="checkalltoggle"></th>
+            <th>ACAD&nbsp;#</th>
+            <th>Common name</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th data-defaultsort="disabled">&nbsp;</th>
+            <th data-defaultsort="disabled">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr v-for="sample in sampleList">
+            <td v-show="tickbox"><input type="checkbox" name="check" id="{{ sample.acad_num}}" value="{{ sample.acad_num }}"></td>
+            <td><a href="{{ sampleHref + sample.acad_num + '/' }}">{{ sample.acad_num }}</a></td>
+            <td>{{ sample.common_name }}</td>
+            <td>{{ sample.category }}</td>
+            <td>{{ sample.get_location }}</td>
+            <td><span v-show="sample.isExtracted" class="glyphicon glyphicon-star" aria-hidden="true" style="color: red;"></span>
+                <span v-show="sample.isCarbondated" class="glyphicon glyphicon-star" aria-hidden="true" style="color: blue;"></span>
+                <span v-show="sample.isAmplified" class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green;"></span>
+                <span v-show="sample.isEnriched" class="glyphicon glyphicon-play-circle" aria-hidden="true" style="color: magenta;"></span>
+                <span v-show="sample.isSequenced" class="glyphicon glyphicon-ok" aria-hidden="true" style="color: black;"></span>
+            </td>
+            <td><a class="btn btn-xs btn-warning" href="{{ sampleHref + sample.acad_num + '/edit/' }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+        </tr>
+    </tbody>
+</table>
+{% endverbatim %}
+</div>
+{% if sampleform %}
+<select name="opt">
+    <option value="csv">Export to CSV</option>
+    <option value="project">Make a project</option>
+</select>
+<input type="submit" class="btn btn-default btn-xs" value="Go">
+</form>
+
+<script>
+    var samplesTable = new Vue({
+        el: "#samples",
+        data: {
+            tickbox: {% if sampleform %}true{% else %}false{% endif %},
+            sampleHref: "{% url 'sample_index' %}",
+            sampleList: []
+        }
+    });
+</script>
+{% endif %}

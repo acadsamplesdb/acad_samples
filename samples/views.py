@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
+import json
 
 from django.db.models import Q
 
@@ -902,6 +903,31 @@ class MySearchView(SearchView):
             if object.model_name == "sample":
                 context["sample_list"].append(object.object)
         return self.render_to_response(context)
+
+# to enable ajax serch as MySearchView
+def search(request):
+    # Not necessary to be here
+    from django.core import serializers
+    f = samples.forms.RawSearchForm(request.GET)
+    samples_response = {'sampleList': []}
+    try:
+        results = f.search()
+        for result in results:
+            sample_obj = result.object
+            sample = json.loads(serializers.serialize('json', [sample_obj]))[0]['fields']
+            sample['acad_num'] = sample_obj.pk
+            sample['get_location'] = '%s %s' % (sample['region'], sample['country'])
+            sample['isExtracted'] = sample_obj.is_extracted()
+            sample['isExtracted'] = sample_obj.is_extracted()
+            sample['isCarbondated'] = sample_obj.is_carbondated()
+            sample['isAmplified'] = sample_obj.is_amplified()
+            sample['isEnriched'] = sample_obj.is_enriched()
+            sample['isSequenced'] = sample_obj.is_sequenced()
+            samples_response['sampleList'].append(sample)
+    except Exception as e:
+        print(e)
+        pass
+    return JsonResponse(samples_response)
 
 from django.contrib.auth.models import User, Group
 class UserEdit(SuccessMessageMixin, UpdateView):
