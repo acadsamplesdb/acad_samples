@@ -3,6 +3,10 @@
 {% block content %}
 <h1>Sample groups</h1>
 {% if samplegroup_list %}
+{% if topbuttons %}
+<p><a class="btn btn-primary" href="{% url 'samplegroup_create' %}">Add sample group</a>
+<a class="btn btn-info" href="{% url 'upload_samplegroups' %}">Upload sample groups</a></p>
+{% endif %}
 <ul>
     {% for samplegroup in samplegroup_list %}
     <li><a href="{% url 'samplegroup_detail' samplegroup.group_num %}">{{ samplegroup }}</a>

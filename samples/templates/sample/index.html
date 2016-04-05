@@ -5,6 +5,10 @@
 <h1>Samples</h1>
 
 {% if sample_list %}
+{% if topbuttons %}
+<p><a class="btn btn-primary" href="{% url 'sample_create' %}">Add sample</a>
+<a class="btn btn-info" href="{% url 'upload_samples' %}">Upload samples</a></p>
+{% endif %}
 {% include "sample/sample_table.html" with sampleform=True %}
 {% endif %}
 
