@@ -796,13 +796,16 @@ def attach_file(request, pk, model):
 
         if form.is_valid():
             from django.forms import ValidationError
-            file = FileAttachment(file = request.FILES["file"])
-            try:
-                file.save()
-            except ValidationError as e:
-                return HttpResponse(e)
-            object.file.add(file)
-            object.save()
+            uploaded = request.FILES.getlist('file')
+            for uf in uploaded:
+                file = FileAttachment(file = uf)
+                try:
+                    file.save()
+                except ValidationError as e:
+                    return HttpResponse(e)
+                object.file.add(file)
+                object.save()
+
             cleaned_data = form.cleaned_data
             if cleaned_data["next"]:
                 return HttpResponseRedirect(cleaned_data["next"] + "#files")
