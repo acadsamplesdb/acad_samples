@@ -137,17 +137,17 @@
         <td>{{ c14.date }}</td>
         <td>{{ c14.error }}</td>
         <td>{{ c14.centre }}-{{ c14.centre_num }}</td>
-        <td>{{ c14.del13 }}</td>
-        <td>{{ c14.del15 }}</td>
-        <td>{{ c14.cnratio }}</td>
-        <td>{{ c14.use_weight }}</td>
-        <td>{{ c14.pyield }}</td>
-        <td>{{ c14.burnweight }}</td>
-        <td>{{ c14.burnyield }}</td>
-        <td>{{ c14.pcbyield }}</td>
-        <td>{{ c14.nyield }}</td>
-        <td>{% if c14.percent_c %}{{ c14.percent_c }}{% endif %}</td>
-        <td>{% if c14.mg_c %}{{ c14.mg_c }}{% endif %}</td>
+        <td>{% if c14.del13 %}{{ c14.del13|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.del15 %}{{ c14.del15|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.cnratio %}{{ c14.cnratio|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.use_weight %}{{ c14.use_weight|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.pyield %}{{ c14.pyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.burnweight %}{{ c14.burnweight|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.burnyield %}{{ c14.burnyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.pcbyield %}{{ c14.pcbyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.nyield %}{{ c14.nyield|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.percent_c %}{{ c14.percent_c|floatcutzeroes }}{% endif %}</td>
+        <td>{% if c14.mg_c %}{{ c14.mg_c|floatcutzeroes }}{% endif %}</td>
     </tr>
     {% endfor %}
     </tbody>
