@@ -360,14 +360,17 @@ class C14(models.Model):
     mg_c = models.DecimalField(max_digits=25, decimal_places=20, blank=True, null=True)
     slug = models.SlugField(max_length=2048, blank=True, null=True)
 
+    def _slug(self):
+        return "{}-{}".format(self.centre.replace(' ', '_'), self.centre_num.replace(' ', '_'))
+
     def __str__(self):
         if self.sample:
             return "{} {}-{}".format(self.sample.get_formatted_acad_num(), self.centre, self.centre_num)
         else:
-            return "{}-{}".format(self.centre, self.centre_num)
+            return self._slug()
 
     def save(self, *args, **kwargs):
-        self.slug = "{}-{}".format(self.centre, self.centre_num)
+        self.slug = self._slug()
         super(C14, self).save(*args, **kwargs)
         """ If this C14 is associated with a sample, we need to save() that
         sample to trigger reindexing it in Elasticsearch and populate its
