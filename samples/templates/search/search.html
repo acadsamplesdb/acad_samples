@@ -55,9 +55,13 @@
         event.preventDefault();
         $.ajax("/ajax/search/?" + $.param({'q':$('#id_q').val()}))
         .done(function( msg ) {
-            var sampleArray = samplesTable.$get('sampleList');
-            sampleArray = sampleArray.concat(msg.sampleList);
-            samplesTable.$set('sampleList', sampleArray);
+            if (msg && msg.sampleList.length) {
+                var sampleArray = samplesTable.$get('sampleList');
+                sampleArray = sampleArray.concat(msg.sampleList);
+                samplesTable.$set('sampleList', sampleArray);
+            } else {
+                alert("No result found.");
+            }
         });
     });
 

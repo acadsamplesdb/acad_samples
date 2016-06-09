@@ -55,12 +55,17 @@
 </form>
 
 <script>
+    // Use of this vue instance is in dynamic query script block in search.html
     var samplesTable = new Vue({
         el: "#samples",
         data: {
             tickbox: {% if sampleform %}true{% else %}false{% endif %},
             sampleHref: "{% url 'sample_index' %}",
             sampleList: []
+        },
+        // table sorting re-analyse
+        watch: {
+            'sampleList': function() { $.bootstrapSortable(true); }
         }
     });
 </script>
